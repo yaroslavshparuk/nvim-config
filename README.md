@@ -1,8 +1,6 @@
 # nvim-config
 
-A personal Neovim config — small, fast, and aimed at the Aptem stack: C# / .NET, Angular / TypeScript, HTML / CSS, Lua, shell, PowerShell, and Markdown notes.
-
-Built on top of `lazy.nvim`. Every plugin earns its place; nothing speculative.
+A personal Neovim config — small, fast, and aimed for my needs. Built on top of `lazy.nvim`. Every plugin earns its place; nothing speculative.
 
 ## What's in it
 
