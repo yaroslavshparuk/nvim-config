@@ -81,7 +81,7 @@ Leader is `<Space>`. Pause after `<leader>` to see the which-key popup.
 |---|---|
 | `<leader>w` / `<leader>q` | Save / quit |
 | `<leader>e` / `<leader>E` | Toggle file tree / reveal current file |
-| `<leader>ff` | Find files |
+| `<leader><leader>` | Find files |
 | `<leader>fg` | Live grep |
 | `<leader>fb` | Buffers |
 | `<leader>fs` / `<leader>fS` | Document / workspace LSP symbols |

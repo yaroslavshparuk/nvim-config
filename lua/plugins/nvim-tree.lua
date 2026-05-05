@@ -8,6 +8,16 @@ return {
       { "<leader>E", "<cmd>NvimTreeFindFile<CR>", desc = "Reveal current file" },
     },
     opts = {
+      on_attach = function(bufnr)
+        local api = require("nvim-tree.api")
+        api.config.mappings.default_on_attach(bufnr)
+        vim.keymap.set("n", "l", api.node.open.edit, {
+          buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "nvim-tree: Open",
+        })
+        vim.keymap.set("n", "h", api.node.navigate.parent_close, {
+          buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "nvim-tree: Close Directory",
+        })
+      end,
       hijack_cursor = true,
       sync_root_with_cwd = true,
       respect_buf_cwd = true,

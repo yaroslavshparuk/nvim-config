@@ -33,6 +33,7 @@ require("lazy").setup({
     { import = "plugins.git" },
     { import = "plugins.format" },
     { import = "plugins.ui" },
+    { import = "plugins.dashboard" },
     { import = "plugins.editing" },
     { import = "plugins.terminal" },
   },
