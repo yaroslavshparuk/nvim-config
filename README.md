@@ -11,6 +11,7 @@ A personal Neovim config — small, fast, and aimed for my needs. Built on top o
 | Syntax / parsing | [`nvim-treesitter`](https://github.com/nvim-treesitter/nvim-treesitter) |
 | LSP framework | [`nvim-lspconfig`](https://github.com/neovim/nvim-lspconfig) + [`mason.nvim`](https://github.com/williamboman/mason.nvim) + [`mason-lspconfig`](https://github.com/williamboman/mason-lspconfig.nvim) |
 | C# language server | [`roslyn.nvim`](https://github.com/seblyng/roslyn.nvim) |
+| Debugger (DAP) | [`nvim-dap`](https://github.com/mfussenegger/nvim-dap) + [`nvim-dap-ui`](https://github.com/rcarriga/nvim-dap-ui) + [`nvim-dap-virtual-text`](https://github.com/theHamsta/nvim-dap-virtual-text) + [`mason-nvim-dap`](https://github.com/jay-babu/mason-nvim-dap.nvim) |
 | Completion | [`blink.cmp`](https://github.com/saghen/blink.cmp) |
 | Fuzzy finder | [`telescope.nvim`](https://github.com/nvim-telescope/telescope.nvim) |
 | File tree | [`nvim-tree`](https://github.com/nvim-tree/nvim-tree.lua) |
@@ -29,9 +30,14 @@ Auto-installed via Mason: `angularls`, `vtsls`, `html`, `cssls`, `lua_ls`, `bash
 
 ## Formatters
 
-Run on save via `conform.nvim`: `csharpier` (C#), `prettier` (web stack + JSON/YAML/MD), `stylua` (Lua), `shfmt` (sh).
+Manual only — bound to `<leader>cf`. Never runs on save.
 
-`:FormatDisable` to turn off globally, `:FormatDisable!` for the buffer only, `:FormatEnable` to re-enable.
+- C# → `dotnet format` (uses the project's `.editorconfig`; ships with the .NET SDK).
+- Web stack + JSON/YAML/MD → `prettier`.
+- Lua → `stylua`.
+- Sh / Bash → `shfmt`.
+
+The non-`dotnet format` tools are auto-installed by `mason-tool-installer.nvim` on first launch.
 
 ## Install
 
@@ -99,6 +105,12 @@ Leader is `<Space>`. Pause after `<leader>` to see the which-key popup.
 | `[d` / `]d` | Prev / next diagnostic |
 | `<C-h/j/k/l>` | Switch window |
 | `<Esc><Esc>` | Leave terminal insert mode |
+| `<leader>db` / `<leader>dB` | Toggle / conditional breakpoint |
+| `<leader>dc` | DAP continue (start session if none) |
+| `<leader>di` / `<leader>do` / `<leader>dO` | Step into / over / out |
+| `<leader>du` / `<leader>dr` | Toggle DAP UI / REPL |
+| `<leader>dk` | Hover variable under cursor |
+| `<leader>dl` / `<leader>dt` | Run last / terminate |
 
 ## Layout
 
@@ -115,6 +127,7 @@ lua/
     treesitter.lua
     lsp.lua                     mason + lspconfig + on_attach keymaps
     roslyn.lua                  C# language server
+    dap.lua                     debugger — nvim-dap + netcoredbg for .NET
     completion.lua              blink.cmp
     telescope.lua
     nvim-tree.lua
@@ -129,5 +142,6 @@ bootstrap.sh                    Linux / macOS fresh-machine installer
 ## Notes
 
 - **Roslyn for C#**: `roslyn.nvim` will prompt to install the Roslyn binary on first `.cs` file open; follow its instructions.
+- **Debugging .NET**: `mason-nvim-dap` auto-installs `netcoredbg` on first DAP load. Build the project with `dotnet build -c Debug`, then `<leader>dc` (continue) on a `.cs` file picks the launch config and prompts for the dll (defaulting to the newest `bin/Debug/**/*.dll`). Set breakpoints with `<leader>db`. The DAP UI opens automatically on launch.
 - **PowerShell on Windows**: `options.lua` sets `pwsh.exe` as the default shell so `:term` and lazygit feel native.
 - **Disable autoformat for one save**: `:noa w` (writes without autocmds, hence without conform).

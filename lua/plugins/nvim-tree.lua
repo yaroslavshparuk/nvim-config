@@ -29,7 +29,9 @@ return {
       view = { width = 36, side = "left", signcolumn = "yes" },
       renderer = {
         group_empty = true,
-        highlight_git = true,
+        highlight_git = "icon",
+        highlight_opened_files = "name",
+        highlight_modified = "name",
         indent_markers = { enable = true },
         icons = {
           show = { file = true, folder = true, folder_arrow = true, git = true },

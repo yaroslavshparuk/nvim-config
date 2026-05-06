@@ -1,19 +1,64 @@
+local function find_csharp_project_root(start_dir)
+  local found = vim.fs.find(function(name)
+    return name:match("%.sln$") or name:match("%.slnx$") or name:match("%.csproj$")
+  end, { upward = true, path = start_dir, type = "file" })[1]
+  if found then return vim.fs.dirname(found) end
+end
+
+local function run_dotnet_format(bufnr)
+  if not vim.api.nvim_buf_is_valid(bufnr) then return end
+  local filepath = vim.api.nvim_buf_get_name(bufnr)
+  if filepath == "" then return end
+  local root = find_csharp_project_root(vim.fs.dirname(filepath))
+  if not root then
+    vim.notify("dotnet format: no .sln/.slnx/.csproj found", vim.log.levels.WARN)
+    return
+  end
+  vim.cmd("write")
+  vim.fn.jobstart({ "dotnet", "format", "--include", filepath }, {
+    cwd = root,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.api.nvim_buf_call(bufnr, function() vim.cmd("checktime") end)
+        end
+        if code ~= 0 then
+          vim.notify("dotnet format exited with code " .. code, vim.log.levels.WARN)
+        end
+      end)
+    end,
+  })
+end
+
 return {
   {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    event = { "VeryLazy" },
+    opts = {
+      ensure_installed = { "prettier", "stylua", "shfmt" },
+      run_on_start = true,
+    },
+  },
+  {
     "stevearc/conform.nvim",
-    event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     keys = {
       {
         "<leader>cf",
-        function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
+        function()
+          if vim.bo.filetype == "cs" then
+            run_dotnet_format(vim.api.nvim_get_current_buf())
+          else
+            require("conform").format({ async = true, lsp_format = "fallback" })
+          end
+        end,
         mode = { "n", "v" },
         desc = "Format buffer / range",
       },
     },
     opts = {
       formatters_by_ft = {
-        cs = { "csharpier" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         javascriptreact = { "prettier" },
@@ -29,25 +74,6 @@ return {
         sh = { "shfmt" },
         bash = { "shfmt" },
       },
-      format_on_save = function(bufnr)
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return nil
-        end
-        return { timeout_ms = 2000, lsp_format = "fallback" }
-      end,
     },
-    init = function()
-      vim.api.nvim_create_user_command("FormatDisable", function(args)
-        if args.bang then
-          vim.b.disable_autoformat = true
-        else
-          vim.g.disable_autoformat = true
-        end
-      end, { desc = "Disable autoformat (! for buffer only)", bang = true })
-      vim.api.nvim_create_user_command("FormatEnable", function()
-        vim.b.disable_autoformat = false
-        vim.g.disable_autoformat = false
-      end, { desc = "Re-enable autoformat" })
-    end,
   },
 }
