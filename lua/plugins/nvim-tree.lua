@@ -11,12 +11,16 @@ return {
       on_attach = function(bufnr)
         local api = require("nvim-tree.api")
         api.config.mappings.default_on_attach(bufnr)
-        vim.keymap.set("n", "l", api.node.open.edit, {
-          buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "nvim-tree: Open",
-        })
-        vim.keymap.set("n", "h", api.node.navigate.parent_close, {
-          buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "nvim-tree: Close Directory",
-        })
+        local map = function(lhs, rhs, desc)
+          vim.keymap.set("n", lhs, rhs, {
+            buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "nvim-tree: " .. desc,
+          })
+        end
+        map("l", api.node.open.edit, "Open")
+        map("h", api.node.navigate.parent_close, "Close Directory")
+        map("]c", api.node.navigate.git.next, "Next Git Change")
+        map("[c", api.node.navigate.git.prev, "Prev Git Change")
+        map("gc", api.tree.toggle_git_clean_filter, "Toggle Git Clean Filter")
       end,
       hijack_cursor = true,
       sync_root_with_cwd = true,
@@ -42,7 +46,7 @@ return {
           },
         },
       },
-      filters = { dotfiles = false, custom = { "^\\.git$" } },
+      filters = { dotfiles = false, git_clean = false, custom = { "^\\.git$" } },
       git = { enable = true, ignore = false },
       diagnostics = { enable = true, show_on_dirs = true },
       actions = {

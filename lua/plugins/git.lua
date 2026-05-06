@@ -14,7 +14,8 @@ return {
       signcolumn = true,
       numhl = false,
       linehl = false,
-      current_line_blame = false,
+      current_line_blame = true,
+      current_line_blame_opts = { delay = 300, virt_text_pos = "eol" },
       preview_config = { border = "rounded" },
       on_attach = function(bufnr)
         local gs = require("gitsigns")
@@ -40,7 +41,16 @@ return {
         map("n", "<leader>gR", gs.reset_buffer, "Reset buffer")
         map("n", "<leader>gp", gs.preview_hunk, "Preview hunk")
         map("n", "<leader>gb", function() gs.blame_line({ full = true }) end, "Blame line")
-        map("n", "<leader>gd", gs.diffthis, "Diff this")
+        map("n", "<leader>gd", function()
+          if vim.wo.diff then
+            vim.cmd("diffoff! | only")
+          else
+            gs.diffthis()
+          end
+        end, "Toggle diff split (HEAD vs working)")
+        map("n", "<leader>gD", function() gs.diffthis("HEAD") end, "Diff against HEAD (skip index)")
+        map("n", "<leader>gv", gs.toggle_deleted, "Toggle inline deleted lines")
+        map("n", "<leader>gw", gs.toggle_word_diff, "Toggle word-level diff")
       end,
     },
   },

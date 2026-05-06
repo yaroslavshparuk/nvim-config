@@ -2,3 +2,4 @@
 *.swp
 *.bak
 lazy-lock.json.bak
+settings.local.json
