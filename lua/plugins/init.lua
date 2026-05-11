@@ -29,6 +29,7 @@ require("lazy").setup({
     { import = "plugins.dap" },
     { import = "plugins.completion" },
     { import = "plugins.telescope" },
+    { import = "plugins.fff" },
     { import = "plugins.nvim-tree" },
     { import = "plugins.yazi" },
     { import = "plugins.git" },
