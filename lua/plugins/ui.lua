@@ -12,6 +12,7 @@ return {
         { "<leader>c", group = "code" },
         { "<leader>b", group = "buffer" },
         { "<leader>t", group = "terminal" },
+        { "<leader>n", group = "dotnet" },
       },
     },
     keys = {

@@ -26,6 +26,7 @@ require("lazy").setup({
     { import = "plugins.treesitter" },
     { import = "plugins.lsp" },
     { import = "plugins.roslyn" },
+    { import = "plugins.easy-dotnet" },
     { import = "plugins.dap" },
     { import = "plugins.completion" },
     { import = "plugins.telescope" },
