@@ -51,7 +51,7 @@ return {
       dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
 
       local mason_root = vim.fn.stdpath("data") .. "/mason/packages/netcoredbg"
-      local netcoredbg = mason_root .. (vim.fn.has("win32") == 1 and "/netcoredbg.exe" or "/netcoredbg")
+      local netcoredbg = mason_root .. (vim.fn.has("win32") == 1 and "/netcoredbg/netcoredbg.exe" or "/netcoredbg")
 
       dap.adapters.coreclr = {
         type = "executable",
