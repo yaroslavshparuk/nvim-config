@@ -1,7 +1,7 @@
 return {
   {
     "GustavEikaas/easy-dotnet.nvim",
-    ft = { "cs", "razor", "fsharp" },
+    ft = { "cs", "fsharp" },
     cmd = { "Dotnet" },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -20,8 +20,11 @@ return {
         console = "integratedTerminal",
       },
       lsp = {
-        enabled = false,
-        preload_roslyn = false,
+        enabled = true,
+        preload_roslyn = true,
+        roslynator_enabled = true,
+        easy_dotnet_analyzer_enabled = true,
+        auto_refresh_codelens = true,
       },
       managed_terminal = { auto_hide = true },
     },
