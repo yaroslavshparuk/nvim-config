@@ -37,19 +37,28 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
-    group = group,
-    callback = function()
-        vim.opt_local.cursorline = true
-    end,
-})
+-- Highlight the current line only in the focused window. Recompute across all
+-- windows (rather than a fragile per-window on/off) so the highlight survives
+-- splits/terminals being opened and closed under us — e.g. easy-dotnet's
+-- managed terminal panel, after which a WinEnter to restore it may not fire.
+local function refresh_cursorline()
+    local cur = vim.api.nvim_get_current_win()
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.api.nvim_win_is_valid(win) then
+            vim.wo[win].cursorline = (win == cur)
+        end
+    end
+end
 
-vim.api.nvim_create_autocmd("WinLeave", {
-    group = group,
-    callback = function()
-        vim.opt_local.cursorline = false
-    end,
-})
+vim.api.nvim_create_autocmd(
+    { "WinEnter", "BufWinEnter", "WinClosed", "TermClose", "TermLeave" },
+    {
+        group = group,
+        callback = function()
+            vim.schedule(refresh_cursorline)
+        end,
+    }
+)
 
 vim.api.nvim_create_autocmd("ColorScheme", {
     group = group,
