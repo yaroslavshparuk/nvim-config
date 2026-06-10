@@ -40,7 +40,7 @@ require("lazy").setup({
     { import = "plugins.editing" },
     { import = "plugins.terminal" },
   },
-  install = { colorscheme = { "catppuccin" } },
+  install = { colorscheme = { "gruvbox" } },
   checker = { enabled = true, notify = false },
   change_detection = { notify = false },
   performance = {
