@@ -36,7 +36,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     event = { "VeryLazy" },
     opts = {
-      ensure_installed = { "prettier", "stylua", "shfmt" },
+      ensure_installed = { "prettier", "stylua", "shfmt", "goimports", "gofumpt" },
       run_on_start = true,
     },
   },
@@ -73,6 +73,7 @@ return {
         lua = { "stylua" },
         sh = { "shfmt" },
         bash = { "shfmt" },
+        go = { "goimports", "gofumpt" },
       },
     },
   },
